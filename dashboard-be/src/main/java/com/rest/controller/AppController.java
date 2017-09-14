@@ -18,4 +18,9 @@ public class AppController {
     String partialHandler(@PathVariable("page") final String page) {
         return page;
     }
+
+    @RequestMapping("/healthcheck")
+    String healthCheck() {
+        return "SpringBootCRUDApp:  v.1.0.0 \nStatus : OK";
+    }
 }
