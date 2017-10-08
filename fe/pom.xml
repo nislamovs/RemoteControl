@@ -16,7 +16,7 @@
     </parent>
 
     <properties>
-        <grunt.target>build</grunt.target>
+        <grunt.target>build --force</grunt.target>
     </properties>
 
     <build>
@@ -33,8 +33,8 @@
                         </goals>
                         <phase>generate-sources</phase>
                         <configuration>
-                            <!--<nodeVersion>v0.10.38</nodeVersion>-->
-                            <!--<npmVersion>2.1.18</npmVersion>-->
+                            <nodeVersion>v0.10.38</nodeVersion>
+                            <npmVersion>2.1.18</npmVersion>
                         </configuration>
                     </execution>
                     <execution>
