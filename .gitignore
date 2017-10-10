@@ -10,9 +10,9 @@ dashboard-be.trace.db
 be/target/*
 
 #FE module
-fe/bower_components/*
-fe/node_modules/*
-fe/.tmp/*
+fe/bower_components
+fe/node_modules
+fe/.tmp
 fe/dist
 fe/node
 fe/etc
