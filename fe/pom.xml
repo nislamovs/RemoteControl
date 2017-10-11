@@ -17,7 +17,7 @@
 
     <properties>
         <grunt.buildtarget>build --force</grunt.buildtarget>
-        <grunt.testtarget>test</grunt.testtarget>
+        <grunt.testtarget>test --force</grunt.testtarget>
     </properties>
 
     <build>
