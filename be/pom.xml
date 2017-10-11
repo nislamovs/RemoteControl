@@ -63,6 +63,15 @@
             <version>3.5</version>
         </dependency>
     </dependencies>
+    <!--<reporting>-->
+        <!--<plugins>-->
+            <!--<plugin>-->
+                <!--<groupId>org.codehaus.mojo</groupId>-->
+                <!--<artifactId>findbugs-maven-plugin</artifactId>-->
+                <!--<version>3.0.1</version>-->
+            <!--</plugin>-->
+        <!--</plugins>-->
+    <!--</reporting>-->
     <build>
         <finalName>DashboardIO</finalName>
         <resources>
@@ -79,6 +88,11 @@
                         <plugin>
                             <groupId>org.codehaus.mojo</groupId>
                             <artifactId>findbugs-maven-plugin</artifactId>
+                            <configuration>
+                                <xmlOutput>true</xmlOutput>
+                                <!-- Optional directory to put findbugs xdoc xml report -->
+                                <xmlOutputDirectory>target/findbugs</xmlOutputDirectory>
+                            </configuration>
                         </plugin>
                     </reportPlugins>
                 </configuration>

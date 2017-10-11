@@ -22,4 +22,11 @@ public class StartDashboardIO extends SpringBootServletInitializer {
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(StartDashboardIO.class);
     }
+
+    public static void testFindbugs() {
+        //Findbugs test
+        String s = null;
+        System.out.println(s.charAt(4));
+    }
+
 }
