@@ -2,14 +2,16 @@
 #Root directory
 dashboard-be.mv.db
 dashboard-be.trace.db
+target/
 *.iml
 **/.idea/*
 *.log
 
 #BE module
-be/target/*
+be/target/
 
 #FE module
+fe/target/
 fe/bower_components
 fe/node_modules
 fe/.tmp
