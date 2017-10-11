@@ -16,7 +16,8 @@
     </parent>
 
     <properties>
-        <grunt.target>build test</grunt.target>
+        <grunt.buildtarget>build</grunt.buildtarget>
+        <grunt.testtarget>test</grunt.testtarget>
     </properties>
 
     <build>
@@ -58,7 +59,17 @@
                         </goals>
                         <phase>generate-resources</phase>
                         <configuration>
-                            <arguments>${grunt.target}</arguments>
+                            <arguments>${grunt.buildtarget}</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>grunt test</id>
+                        <goals>
+                            <goal>grunt</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <arguments>${grunt.testtarget}</arguments>
                         </configuration>
                     </execution>
                 </executions>
