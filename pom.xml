@@ -25,6 +25,7 @@
     <modules>
         <module>be</module>
         <module>fe</module>
+        <module>dashboardIT</module>
     </modules>
 
 </project>
