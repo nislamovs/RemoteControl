@@ -6,6 +6,7 @@ target/
 *.iml
 **/.idea/*
 *.log
+temp
 
 #BE module
 be/target/
