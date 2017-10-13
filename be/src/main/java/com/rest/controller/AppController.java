@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class AppController {
 
+    private static final String healthCheckString = "<p>Dashboard IO:  v.1.0.0</p><p>Status : OK</p>";
+
     @RequestMapping("/")
     String home(ModelMap modal) {
         modal.addAttribute("title", "CRUD Example");
@@ -25,6 +27,7 @@ public class AppController {
     @RequestMapping("/healthcheck")
     @ResponseBody
     public ResponseEntity<String> healthCheck() {
-        return ResponseEntity.status(HttpStatus.OK).body("<p>Dashboard IO:  v.1.0.0</p><p>Status : OK</p>");
+        String env = "<p>Environment : " + System.getProperty("env") + "</p>";
+        return ResponseEntity.status(HttpStatus.OK).body(healthCheckString + env);
     }
 }
