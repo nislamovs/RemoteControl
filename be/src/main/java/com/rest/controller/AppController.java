@@ -30,11 +30,8 @@ public class AppController {
         String env = "<p>Environment : " + System.getProperty("env") + "</p>";
 
         String sysProp = System.getProperties()
-                .stringPropertyNames()
                 .toString()
-                .replaceAll("[,]", "<br>")
-                .replaceAll("\\[", "<p>")
-                .replaceAll("\\]", "</p>");
+                .replaceAll("[,]", "<br>");
 
         return ResponseEntity.status(HttpStatus.OK).body(healthCheckString + env + sysProp);
     }
