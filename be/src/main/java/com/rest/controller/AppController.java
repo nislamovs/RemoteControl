@@ -28,6 +28,14 @@ public class AppController {
     @ResponseBody
     public ResponseEntity<String> healthCheck() {
         String env = "<p>Environment : " + System.getProperty("env") + "</p>";
-        return ResponseEntity.status(HttpStatus.OK).body(healthCheckString + env);
+
+        String sysProp = System.getProperties()
+                .stringPropertyNames()
+                .toString()
+                .replaceAll("[,]", "<br>")
+                .replaceAll("\\[", "<p>")
+                .replaceAll("\\]", "</p>");
+
+        return ResponseEntity.status(HttpStatus.OK).body(healthCheckString + env + sysProp);
     }
 }
