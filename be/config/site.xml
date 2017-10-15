@@ -1,0 +1,49 @@
+<project name="Dashboard IO">
+
+    <poweredBy>
+        <logo name="Maven"
+              href="http://maven.apache.org/"
+              img="http://completeelectrical.biz/wp-content/uploads/2013/09/Windows_7_-_Electronic_circuit.jpg"/>
+    </poweredBy>
+
+    <skin>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-fluido-skin</artifactId>
+        <version>1.5</version>
+    </skin>
+
+    <body>
+
+        <!-- Inherit this menu for sub modules. -->
+        <!--<menu name="Module Documentation" inherit="top" >-->
+            <!--<item name="Overview" href="index.html" >-->
+            <!--</item>-->
+
+            <!--<item name="Information" href="project-info.html" >-->
+                <!--<item name="Dependencies" href="dependencies.html" />-->
+                <!--<item name="Project Plugins" href="plugins.html" />-->
+                <!--<item name="Project Summmary" href="project-summary.html" />-->
+            <!--</item>-->
+
+            <!--<item name="Reports" href="project-reports.html" >-->
+                <!--<item name="Checkstyle" href="checkstyle.html" />-->
+                <!--<item name="Your Report" href="your-report.html" />-->
+            <!--</item>-->
+        <!--</menu>-->
+
+        <menu ref="modules" inherit="top" />
+
+        <menu ref="reports" inherit="top"/>
+
+        <!--<menu name="Cobertura" inherit="bottom">-->
+            <!--<item name="Report" href="cobertura/index.html" />-->
+        <!--</menu>-->
+
+        <links>
+            <item name="Apache" href="http://www.apache.org"/>
+            <item name="Maven" href="http://maven.apache.org"/>
+            <item name="Cobertura" href="http://www.mojohaus.org/cobertura-maven-plugin/plugin-info.html"/>
+        </links>
+
+    </body>
+</project>
