@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Configuration
-//@Profile("dev") // Only activate this in the "dev" profile
+@Profile("dev") // Only activate this in the "dev" profile
 public class H2ServerConfiguration {
 
     private static final String H2_TCP_PORT="9092";

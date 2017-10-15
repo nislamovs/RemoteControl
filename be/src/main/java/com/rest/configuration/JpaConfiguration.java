@@ -28,8 +28,8 @@ import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
 @EnableJpaRepositories(basePackages = "com.rest.repositories",
-entityManagerFactoryRef = "entityManagerFactory",
-transactionManagerRef = "transactionManager")
+                       entityManagerFactoryRef = "entityManagerFactory",
+                       transactionManagerRef = "transactionManager")
 @EnableTransactionManagement
 public class JpaConfiguration {
 
