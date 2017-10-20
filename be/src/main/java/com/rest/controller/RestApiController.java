@@ -39,27 +39,26 @@ public class RestApiController {
         return new ResponseEntity<List<User>>(users, HttpStatus.OK);
     }
 
-    // -------------------Retrieve All Users---------------------------------------------
-    // -------------------Original---------------------------------------------
-//    @RequestMapping(value = "/user2/", method = RequestMethod.GET)
-//    public ResponseEntity<List<User>> listAllUsers() {
-//        List<User> users = userService.findAllUsers();
-//        if (users.isEmpty()) {
-//            return new ResponseEntity(HttpStatus.NO_CONTENT);
-//            // You many decide to return HttpStatus.NOT_FOUND
-//        }
-//        return new ResponseEntity<List<User>>(users, HttpStatus.OK);
-//    }
-
-    // -------------------Retrieve Single User------------------------------------------
-
+    // -------------------Retrieve Single User by ID------------------------------------------
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getUser(@PathVariable("id") long id) {
+    public ResponseEntity<?> getUserByID(@PathVariable("id") long id) {
         logger.info("Fetching User with id {}", id);
         User user = userService.findById(id);
         if (user == null) {
             logger.error("User with id {} not found.", id);
             return new ResponseEntity(new CustomErrorType("User with id " + id + " not found"), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<User>(user, HttpStatus.OK);
+    }
+
+    // -------------------Retrieve Single User by name------------------------------------------
+    @RequestMapping(value = "/getuser/{username}", method = RequestMethod.GET)
+    public ResponseEntity<?> getUserByUsername(@PathVariable("username") String username) {
+        logger.info("Fetching User with username {}", username);
+        User user = userService.findByName(username);
+        if (user == null) {
+            logger.error("User with username {} not found.", username);
+            return new ResponseEntity(new CustomErrorType("User with username " + username + " not found"), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<User>(user, HttpStatus.OK);
     }
