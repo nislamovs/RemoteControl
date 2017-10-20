@@ -15,7 +15,7 @@
     </parent>
 
     <build>
-        <sourceDirectory>../be/src/main</sourceDirectory>
+        <!--<sourceDirectory>../be/src/main</sourceDirectory>-->
 
         <pluginManagement>
             <plugins>
@@ -78,6 +78,9 @@
             <groupId>com.dashboard</groupId>
             <artifactId>dashboard-server</artifactId>
             <version>${project.version}</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/../be/target/DashboardIO-classes.jar</systemPath>
+            <!--<type>jar</type>-->
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
