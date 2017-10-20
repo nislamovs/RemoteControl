@@ -31,6 +31,6 @@ public class DiagnosticsController {
         params.put("Deployment date", properties.getProperty("application.deploymentdate"));
         params.put("Status", "OK");
 
-        return new ResponseEntity<>(params, HttpStatus.OK);
+        return new ResponseEntity<Map<String, String>>(params, HttpStatus.OK);
     }
 }
