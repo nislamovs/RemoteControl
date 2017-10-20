@@ -23,7 +23,7 @@ public class DiagnosticsController {
     public ResponseEntity<Map<String, String>> healthcheck() throws IOException {
         logger.info("Healthcheck requested.");
         Properties properties = new Properties();
-        properties.load(ClassLoader.getSystemResourceAsStream("build.properties"));
+        properties.load(getClass().getClassLoader().getResourceAsStream("build.properties"));
 
         Map<String, String> params = new TreeMap<String, String>();
         params.put("Dashboard IO", properties.getProperty("application.version"));
