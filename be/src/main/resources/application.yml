@@ -3,7 +3,7 @@ server:
   contextPath: /DashboardIO
 ---
 spring:
-  profiles: dev
+  profiles: development
 datasource:
   sampleapp:
     url: jdbc:h2:~/test
@@ -19,7 +19,7 @@ datasource:
       dialect: org.hibernate.dialect.H2Dialect
 ---
 spring:
-  profiles: prod,default
+  profiles: production
 datasource:
   sampleapp:
     url: jdbc:mysql://localhost:3306/main
