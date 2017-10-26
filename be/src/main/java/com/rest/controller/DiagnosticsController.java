@@ -1,7 +1,9 @@
 package com.rest.controller;
 
+import com.rest.service.AlertService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.ManagedMap;
 import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,9 @@ public class DiagnosticsController {
 
     private static final Logger logger = LoggerFactory.getLogger(DiagnosticsController.class);
 
+    @Autowired
+    AlertService alertService;
+
     @RequestMapping(value = "/healthcheck", method = RequestMethod.GET)
     public ResponseEntity<Map<String, String>> healthcheck() throws IOException {
         logger.info("Healthcheck requested.");
@@ -32,6 +37,26 @@ public class DiagnosticsController {
         params.put("Active Spring profile(s)", System.getProperty(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME));
         params.put("Deployment date", properties.getProperty("application.deploymentdate"));
         params.put("Status", "OK");
+
+        return new ResponseEntity<Map<String, String>>(params, HttpStatus.OK);
+    }
+
+//    @Profile("development")
+    @RequestMapping(value = "/alertmail", method = RequestMethod.GET)
+    public ResponseEntity<Map<String, String>> alertmail() {
+
+        try {
+            logger.info("Dropping exception ...");
+            throw new RuntimeException("Testing alert service... check mail :)");
+        } catch (RuntimeException e) {
+            logger.info("Catching exception ...");
+            alertService.sendError(e);
+        }
+
+        logger.info("Exception generated. Alert mail sent.");
+
+        Map<String, String> params = new ManagedMap<>();
+        params.put("Status", "Exception generated. Alert mail sent.");
 
         return new ResponseEntity<Map<String, String>>(params, HttpStatus.OK);
     }

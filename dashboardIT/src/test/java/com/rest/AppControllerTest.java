@@ -21,7 +21,7 @@ public class AppControllerTest extends AbstractIntegrationTest {
                 .body(containsString("head"))
                 .body(containsString("body"))
                 .body(containsString("script"))
-                .body(containsString("CRUD Example"));
+                .body(containsString("Dashboard IO"));
     }
 
     @Test

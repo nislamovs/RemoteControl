@@ -10,6 +10,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.AbstractEnvironment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -19,6 +20,7 @@ import java.util.Properties;
 
 @Import({JpaConfiguration.class, H2ServerConfiguration.class})
 @SpringBootApplication(scanBasePackages={"com.rest"})
+@EnableScheduling
 public class StartDashboardIO extends SpringBootServletInitializer {
 
     private static final String BUILD_PROPERTIES = "build.properties";
