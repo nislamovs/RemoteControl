@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
 
@@ -21,6 +24,7 @@ import java.util.Properties;
 public class DiagnosticsController {
 
     private static final Logger logger = LoggerFactory.getLogger(DiagnosticsController.class);
+    private static final DateFormat DATETIME_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     @Autowired
     AlertService alertService;
@@ -57,6 +61,7 @@ public class DiagnosticsController {
 
         Map<String, String> params = new ManagedMap<>();
         params.put("Status", "Exception generated. Alert mail sent.");
+        params.put("Time", String.valueOf(DATETIME_FORMAT.format(new Date())));
 
         return new ResponseEntity<Map<String, String>>(params, HttpStatus.OK);
     }
