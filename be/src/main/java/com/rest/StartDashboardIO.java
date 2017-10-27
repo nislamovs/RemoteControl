@@ -14,7 +14,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import java.io.IOException;
 import java.util.Properties;
 
 
@@ -49,9 +48,9 @@ public class StartDashboardIO extends SpringBootServletInitializer {
         Properties properties = new Properties();
         String env = "";
         try {
-            properties.load(ClassLoader.getSystemResourceAsStream(BUILD_PROPERTIES));
+            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(BUILD_PROPERTIES));
             env = properties.getProperty("application.environment").toLowerCase();
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("Problem with loading build properties.", e);
         }
 

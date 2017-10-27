@@ -20,7 +20,7 @@
     <appender name="FILE-ASYNC" class="ch.qos.logback.classic.AsyncAppender">
         <appender-ref ref="FILE"/>
         <includeCallerData>true</includeCallerData>
-        <queueSize>10</queueSize>
+        <queueSize>2000</queueSize>
         <!-- do not lose warn, info or trace events if queue gets full -->
         <discardingThreshold>0</discardingThreshold>
     </appender>
