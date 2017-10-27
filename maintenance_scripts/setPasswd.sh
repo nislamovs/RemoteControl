@@ -37,4 +37,4 @@ echo "Dev pass string  : $DEV_PASSWD_STR";
 echo "Prod pass string : $PROD_PASSWD_STR";
 
 sed -i "s/$PASSWD_PREFIX.*/$DEV_PASSWD_STR/g" $DEV_PROPS_PATH
-sed -i "s/$PASSWD_PREFIX.*/$DEV_PASSWD_STR/g" $PROD_PROPS_PATH
+sed -i "s/$PASSWD_PREFIX.*/$PROD_PASSWD_STR/g" $PROD_PROPS_PATH
