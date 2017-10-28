@@ -7,7 +7,7 @@
  * # MainCtrl
  * Controller of the angularApp
  */
-angular.module('angularApp')
+angular.module('dashboardFE')
   .controller('MainCtrl', function () {
     this.awesomeThings = [
       'HTML5 Boilerplate',

@@ -7,7 +7,7 @@
  * # AboutCtrl
  * Controller of the angularApp
  */
-angular.module('angularApp')
+angular.module('dashboardFE')
   .controller('AboutCtrl', function () {
     this.awesomeThings = [
       'HTML5 Boilerplate',
