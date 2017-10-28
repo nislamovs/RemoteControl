@@ -20,7 +20,7 @@ fe/dist
 fe/node
 fe/etc
 fe/.sass-cache
-fe/coverage
+**/coverage
 
 
 
