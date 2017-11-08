@@ -360,11 +360,16 @@ module.exports = function (grunt) {
           removeCommentsFromCDATA: true
         },
         files: [{
-          expand: true,
-          cwd: '<%= yeoman.app %>',
-          src: ['*.html', 'views/*.html'],
-          dest: '<%= yeoman.dist %>'
-        }]
+                expand: true,
+                cwd: '<%= yeoman.app %>',
+                src: ['*.html', 'views/*.html'],
+                dest: '<%= yeoman.dist %>'
+            },  {
+                expand: true,
+                cwd: '<%= yeoman.dist %>',
+                src: ['*.html'],
+                dest: '<%= yeoman.dist %>'
+            }]
       }
     },
 
