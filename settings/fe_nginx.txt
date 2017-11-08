@@ -1,0 +1,31 @@
+#To setup nginx for FE:
+
+#Go to /etc/nginx/sites-available and edit file "default" :
+#If it is not exist - create it:
+
+sudo vim /etc/nginx/sites-available/default
+
+#Add folder where Your content is:
+# server block should look like this:
+
+server {
+    listen 80;
+
+    root   /frontends/dashboardio;
+    index index.html index.htm;
+}
+
+#Add the following lines:
+
+include /etc/nginx/sites-available/*;
+include /etc/nginx/sites-enabled/*;
+
+#to the end of file /etc/nginx/nginx.conf
+#using command:
+
+sudo vim /etc/nginx/nginx.conf
+
+#restart nginx :
+sudo service nginx restart
+
+#Have fun!!!

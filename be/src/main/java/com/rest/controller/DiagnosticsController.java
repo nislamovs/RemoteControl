@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.ManagedMap;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ import java.util.Properties;
 
 @RestController
 @RequestMapping("/sys")
-public class DiagnosticsController {
+public class DiagnosticsController extends AbstractController {
 
     private static final Logger logger = LoggerFactory.getLogger(DiagnosticsController.class);
     private static final DateFormat DATETIME_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -45,7 +46,7 @@ public class DiagnosticsController {
         return new ResponseEntity<Map<String, String>>(params, HttpStatus.OK);
     }
 
-//    @Profile("development")
+    @Profile("development")
     @RequestMapping(value = "/alertmail", method = RequestMethod.GET)
     public ResponseEntity<Map<String, String>> alertmail() {
 
