@@ -2,7 +2,7 @@ var app = angular.module('crudApp',['ui.router','ngStorage']);
 
 app.constant('urls', {
     BASE: 'href="http://backend:8080/DashboardIO',
-    USER_SERVICE_API: 'http://backend:8080/DashboardIO/api/user/'
+    USER_SERVICE_API: 'http://backend:8080/DashboardIO/api/users/'
 });
 
 app.config(['$stateProvider', '$urlRouterProvider',
