@@ -13,7 +13,7 @@
 //
 // app.constant('urls', {
 //     BASE: 'href="http://backend:8080/DashboardIO',
-//     USER_SERVICE_API: 'http://backend:8080/DashboardIO/api/users/'
+//     USER_SERVICE_API: 'http://backend:8080/DashboardIO/api/user/'
 // });
 //
 // app.config(['$stateProvider', '$urlRouterProvider',
