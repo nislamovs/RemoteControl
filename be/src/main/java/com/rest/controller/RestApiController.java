@@ -24,7 +24,7 @@ public class RestApiController extends AbstractController {
     UserService userService; //Service which will do all data retrieval/manipulation work
 
     // -------------------Retrieve All Users---------------------------------------------
-    @RequestMapping(value = "/users/", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/", method = RequestMethod.GET)
     public ResponseEntity<List<User>> listAllUsers() {
         List<User> users = userService.findAllUsers();
         if (users.isEmpty()) {
