@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en" ng-app="crudApp">
+<html lang="en" ng-app="dashboardFE">
     <head>
         <title>${title}</title>
         <link href="css/bootstrap.css" rel="stylesheet"/>

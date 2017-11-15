@@ -1,6 +1,7 @@
 package com.rest.controller;
 
 import com.rest.service.AlertService;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class DiagnosticsController extends AbstractController {
     @Autowired
     AlertService alertService;
 
+    @ApiOperation(value="healthcheck", notes="Application healthcheck.")
     @RequestMapping(value = "/healthcheck", method = RequestMethod.GET)
     public ResponseEntity<Map<String, String>> healthcheck() throws IOException {
         logger.info("Healthcheck requested.");
@@ -46,6 +48,7 @@ public class DiagnosticsController extends AbstractController {
         return new ResponseEntity<Map<String, String>>(params, HttpStatus.OK);
     }
 
+    @ApiOperation(value="alertmail", notes="Generates exception, catches it and send stacktrace to email.")
     @Profile("development")
     @RequestMapping(value = "/alertmail", method = RequestMethod.GET)
     public ResponseEntity<Map<String, String>> alertmail() {

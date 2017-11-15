@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/api")
 public class RestApiController extends AbstractController {
 
-    public static final Logger logger = LoggerFactory.getLogger(RestApiController.class);
+    private static final Logger logger = LoggerFactory.getLogger(RestApiController.class);
 
     @Autowired
     UserService userService; //Service which will do all data retrieval/manipulation work

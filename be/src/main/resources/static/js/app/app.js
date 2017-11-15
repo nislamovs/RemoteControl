@@ -1,4 +1,4 @@
-var app = angular.module('crudApp',['ui.router','ngStorage']);
+var app = angular.module('dashboardFE',['ui.router','ngStorage']);
 
 app.constant('urls', {
     BASE: 'href="http://backend:8080/DashboardIO',
