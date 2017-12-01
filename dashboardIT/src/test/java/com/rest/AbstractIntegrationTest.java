@@ -25,7 +25,7 @@ public class AbstractIntegrationTest {
     public static final String REGEX_DATETIME= "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}";
 
     public static final Properties props = new Properties();
-    private static final Logger logger = LoggerFactory.getLogger(AbstractIntegrationTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractIntegrationTest.class);
 
     @BeforeClass
     public static void initializeData() throws IOException {
@@ -38,8 +38,8 @@ public class AbstractIntegrationTest {
         properties.load(ClassLoader.getSystemResourceAsStream(env + ".properties"));
         RestAssured.baseURI = properties.getProperty("host");
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-        logger.info("Before class launched and initialized.");
-        logger.info("Host : {}", properties.getProperty("host"));
+        LOG.info("Before class launched and initialized.");
+        LOG.info("Host : {}", properties.getProperty("host"));
     }
 
     @Before

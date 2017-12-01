@@ -468,6 +468,25 @@ module.exports = function (grunt) {
         configFile: 'test/karma.conf.js',
         singleRun: true
       }
+    },
+
+    shell: {
+        versionFromGit: {
+            command: [
+                'cd <%= yeoman.app %>',
+                'git rev-parse --abbrev-ref HEAD > version.txt',
+                'git rev-list --format=%B --max-count=1 HEAD >> version.txt >> version.txt'
+            ].join('&&')
+        },
+        cleanServer: {
+            command: 'sshpass -f ../temp/srvpass.txt ssh jenkins@box15 "cd /frontends/dashboardio/; rm -rf *"'
+        },
+        copyToServer: {
+            command: 'sshpass -f ../temp/srvpass.txt rsync -avz --progress ../fe/dist/* jenkins@box15:/frontends/dashboardio/'
+        },
+        shellTest: {
+            command: 'echo "\nThis is shell test (grunt shell) =P \n"'
+        }
     }
   });
 
@@ -517,6 +536,16 @@ module.exports = function (grunt) {
     'filerev',
     'usemin',
     'htmlmin'
+  ]);
+
+  grunt.registerTask('deploy', [
+      'build',
+      'shell:cleanServer',
+      'shell:copyToServer'
+  ]);
+
+  grunt.registerTask('shellTest', [
+      'shell:shellTest'
   ]);
 
   grunt.registerTask('default', [

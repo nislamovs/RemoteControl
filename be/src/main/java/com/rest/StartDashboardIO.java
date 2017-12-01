@@ -26,7 +26,7 @@ public class StartDashboardIO extends SpringBootServletInitializer {
     private static final String DEV_ENVIRONMENT = "development";
     private static final String PROD_ENVIRONMENT = "production";
 
-    private static final Logger logger = LoggerFactory.getLogger(StartDashboardIO.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StartDashboardIO.class);
 
     public static void main(String[] args) {
         System.setProperty(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME, getProfile());
@@ -51,7 +51,7 @@ public class StartDashboardIO extends SpringBootServletInitializer {
             properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(BUILD_PROPERTIES));
             env = properties.getProperty("application.environment").toLowerCase();
         } catch (Exception e) {
-            logger.error("Problem with loading build properties.", e);
+            LOG.error("Problem with loading build properties.", e);
         }
 
         return env.equals(PROD_ENVIRONMENT) ? PROD_ENVIRONMENT : DEV_ENVIRONMENT;

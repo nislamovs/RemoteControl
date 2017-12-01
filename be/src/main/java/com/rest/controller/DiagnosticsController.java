@@ -25,7 +25,7 @@ import java.util.Properties;
 @RequestMapping("/sys")
 public class DiagnosticsController extends AbstractController {
 
-    private static final Logger logger = LoggerFactory.getLogger(DiagnosticsController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DiagnosticsController.class);
     private static final DateFormat DATETIME_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     @Autowired
@@ -34,7 +34,7 @@ public class DiagnosticsController extends AbstractController {
     @ApiOperation(value="healthcheck", notes="Application healthcheck.")
     @RequestMapping(value = "/healthcheck", method = RequestMethod.GET)
     public ResponseEntity<Map<String, String>> healthcheck() throws IOException {
-        logger.info("Healthcheck requested.");
+        LOG.info("Healthcheck requested.");
         Properties properties = new Properties();
         properties.load(getClass().getClassLoader().getResourceAsStream("build.properties"));
 
@@ -54,14 +54,14 @@ public class DiagnosticsController extends AbstractController {
     public ResponseEntity<Map<String, String>> alertmail() {
 
         try {
-            logger.info("Dropping exception ...");
+            LOG.info("Dropping exception ...");
             throw new RuntimeException("Testing alert service... check mail :)");
         } catch (RuntimeException e) {
-            logger.info("Catching exception ...");
+            LOG.info("Catching exception ...");
             alertService.sendError(e);
         }
 
-        logger.info("Exception generated. Alert mail sent.");
+        LOG.info("Exception generated. Alert mail sent.");
 
         Map<String, String> params = new ManagedMap<>();
         params.put("Status", "Exception generated. Alert mail sent.");

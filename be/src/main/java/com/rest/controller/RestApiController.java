@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/api")
 public class RestApiController extends AbstractController {
 
-    private static final Logger logger = LoggerFactory.getLogger(RestApiController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RestApiController.class);
 
     @Autowired
     UserService userService; //Service which will do all data retrieval/manipulation work
@@ -36,10 +36,10 @@ public class RestApiController extends AbstractController {
     // -------------------Retrieve Single User by ID------------------------------------------
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getUserByID(@PathVariable("id") long id) {
-        logger.info("Fetching User with id {}", id);
+        LOG.info("Fetching User with id {}", id);
         User user = userService.findById(id);
         if (user == null) {
-            logger.error("User with id {} not found.", id);
+            LOG.error("User with id {} not found.", id);
             return new ResponseEntity(new CustomErrorType("User with id " + id + " not found"), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<User>(user, HttpStatus.OK);
@@ -48,10 +48,10 @@ public class RestApiController extends AbstractController {
     // -------------------Retrieve Single User by name------------------------------------------
     @RequestMapping(value = "/getuser/{username}", method = RequestMethod.GET)
     public ResponseEntity<?> getUserByUsername(@PathVariable("username") String username) {
-        logger.info("Fetching User with username {}", username);
+        LOG.info("Fetching User with username {}", username);
         User user = userService.findByName(username);
         if (user == null) {
-            logger.error("User with username {} not found.", username);
+            LOG.error("User with username {} not found.", username);
             return new ResponseEntity(new CustomErrorType("User with username " + username + " not found"), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<User>(user, HttpStatus.OK);
@@ -61,10 +61,10 @@ public class RestApiController extends AbstractController {
 
     @RequestMapping(value = "/user/", method = RequestMethod.POST)
     public ResponseEntity<?> createUser(@RequestBody User user, UriComponentsBuilder ucBuilder) {
-        logger.info("Creating User : {}", user);
+        LOG.info("Creating User : {}", user);
 
         if (userService.isUserExists(user)) {
-            logger.error("Unable to create. A User with name {} already exists", user.getName());
+            LOG.error("Unable to create. A User with name {} already exists", user.getName());
             return  new ResponseEntity(new CustomErrorType("Unable to create. A user with name " + user.getName() + " already exists."), HttpStatus.CONFLICT);
         }
         userService.saveUser(user);
@@ -78,12 +78,12 @@ public class RestApiController extends AbstractController {
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> updateUser(@PathVariable("id") long id, @RequestBody User user) {
-        logger.info("Updating User with id {}", id);
+        LOG.info("Updating User with id {}", id);
 
         User currentUser = userService.findById(id);
 
         if(currentUser == null) {
-            logger.error("Unable to update. User with id {} not exists.", id);
+            LOG.error("Unable to update. User with id {} not exists.", id);
             return new ResponseEntity(new CustomErrorType("Unable to update. User with id " + id + " not found."), HttpStatus.NOT_FOUND);
         }
 
@@ -99,11 +99,11 @@ public class RestApiController extends AbstractController {
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteUser(@PathVariable("id") long id) {
-        logger.info("Fetching & Deleting User with id {}", id);
+        LOG.info("Fetching & Deleting User with id {}", id);
 
         User user = userService.findById(id);
         if (user == null) {
-            logger.error("Unable to delete. User with id {} not found.", id);
+            LOG.error("Unable to delete. User with id {} not found.", id);
             return new ResponseEntity(new CustomErrorType("Unable to delete. User with id " + id + " not found."), HttpStatus.NOT_FOUND);
         }
         userService.deleteUserById(id);
@@ -114,7 +114,7 @@ public class RestApiController extends AbstractController {
 
     @RequestMapping(value = "/user/", method = RequestMethod.DELETE)
     public ResponseEntity<User> deleteAllUsers() {
-        logger.info("Deleting All Users");
+        LOG.info("Deleting All Users");
 
         userService.deleteAllUsers();
         return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
