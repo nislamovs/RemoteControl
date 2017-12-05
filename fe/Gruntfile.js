@@ -539,7 +539,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('deploy', [
-      'build',
+      // 'build',
       'shell:cleanServer',
       'shell:copyToServer'
   ]);
