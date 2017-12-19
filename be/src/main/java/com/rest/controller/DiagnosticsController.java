@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -74,9 +75,10 @@ public class DiagnosticsController extends AbstractController {
     }
 
     @GetMapping(value = "/sendemail/")
-    public ResponseEntity<?> sendMail() {
+    public ResponseEntity<?> sendMail(
+            @RequestParam(value = "keyword", required = false, defaultValue = "This is test message.") String keyword) {
 
-        mailService.sendMail("This is test message.", environment.getProperty("alert.email.to"));
+        mailService.sendMail(keyword, environment.getProperty("alert.email.to"));
         return new ResponseEntity<>("{ok}", HttpStatus.OK);
     }
 }

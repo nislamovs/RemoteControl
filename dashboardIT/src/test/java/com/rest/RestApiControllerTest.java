@@ -1,6 +1,6 @@
 package com.rest;
 
-import com.rest.model.User;
+import com.rest.model.Userdata;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
@@ -10,25 +10,24 @@ import static org.hamcrest.core.IsEqual.equalTo;
 
 public class RestApiControllerTest extends AbstractIntegrationTest {
 
-
     @Test
     public void apiInvalidPathTest() {
         given()
         .when()
-                .post("/api/sdrba/")
+                .post("/api/invalid_path/")
         .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .body("status", equalTo(HttpStatus.NOT_FOUND.value()))
                 .body("error", equalTo("Not Found"))
                 .body("message", containsString("No message available"))
-                .body("path", equalTo("/DashboardIO/api/sdrba/"));
+                .body("path", equalTo("/DashboardIO/api/invalid_path/"));
     }
 
     @Test
     public void retrieveAllUsersTest_normalCase() {
         given()
         .when()
-                .get("/api/user/")
+                .get("/api/userdata/")
         .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("id[0]", equalTo(1))
@@ -41,21 +40,21 @@ public class RestApiControllerTest extends AbstractIntegrationTest {
     public void retrieveAllUsersTest_wrongHttpVerb() {
         given()
         .when()
-                .post("/api/user/")
+                .post("/api/userdata/")
         .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("status", equalTo(HttpStatus.BAD_REQUEST.value()))
                 .body("error", equalTo("Bad Request"))
                 .body("exception", containsString("HttpMessageNotReadableException"))
                 .body("message", containsString("Required request body is missing"))
-                .body("path", equalTo("/DashboardIO/api/user/"));
+                .body("path", equalTo("/DashboardIO/api/userdata/"));
     }
 
     @Test
     public void retrieveSingleUserTest_normalCase() {
         given()
         .when()
-                .get("/api/user/1")
+                .get("/api/userdata/1")
         .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("id", equalTo(1))
@@ -68,38 +67,38 @@ public class RestApiControllerTest extends AbstractIntegrationTest {
     public void retrieveSingleUserTest_wrongId() {
         given()
         .when()
-                .get("/api/user/9999")
+                .get("/api/userdata/9999")
         .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
-                .body("errorMessage", equalTo("User with id 9999 not found"));
+                .body("errorMessage", equalTo("Userdata with id 9999 not found"));
     }
 
     @Test
     public void retrieveSingleUserTest_wrongHttpVerb() {
         given()
         .when()
-                .post("/api/user/555")
+                .post("/api/userdata/555")
         .then()
                 .statusCode(HttpStatus.METHOD_NOT_ALLOWED.value())
                 .body("status", equalTo(HttpStatus.METHOD_NOT_ALLOWED.value()))
                 .body("error", equalTo("Method Not Allowed"))
                 .body("exception", containsString("HttpRequestMethodNotSupportedException"))
                 .body("message", containsString("Request method 'POST' not supported"))
-                .body("path", equalTo("/DashboardIO/api/user/555"));
+                .body("path", equalTo("/DashboardIO/api/userdata/555"));
     }
 
     @Test
     public void createUserTest_normalCase() {
 
         String randUName = getRandomUsername();
-        User user = new User();
-        user.setName(randUName);
-        user.setSalary(44433.0);
-        user.setAge(40);
+        Userdata userdata = new Userdata();
+        userdata.setName(randUName);
+        userdata.setSalary(44433.0);
+        userdata.setAge(40);
 
-        given().body(user)
+        given().body(userdata)
         .when()
-                .post("api/user/")
+                .post("api/userdata/")
         .then()
                 .statusCode(HttpStatus.CREATED.value());
 
@@ -113,38 +112,38 @@ public class RestApiControllerTest extends AbstractIntegrationTest {
     @Test
     public void createUserTest_alreadyExists() {
         String randUName = getRandomUsername();
-        User user = new User();
-        user.setName(randUName);
-        user.setSalary(44433.0);
-        user.setAge(40);
+        Userdata userdata = new Userdata();
+        userdata.setName(randUName);
+        userdata.setSalary(44433.0);
+        userdata.setAge(40);
 
-        given().body(user).when().post("api/user/").then().statusCode(HttpStatus.CREATED.value());
+        given().body(userdata).when().post("api/userdata/").then().statusCode(HttpStatus.CREATED.value());
 
         given()
-                .body(user)
+                .body(userdata)
         .when()
-                .post("api/user/")
+                .post("api/userdata/")
         .then()
                 .statusCode(HttpStatus.CONFLICT.value())
-                .body("errorMessage", equalTo("Unable to create. A user with name " + randUName + " already exists."));
+                .body("errorMessage", equalTo("Unable to create. A userdata with name " + randUName + " already exists."));
     }
 
     @Test
     public void createUserTest_invalidUser() {
-        User user = new User();
-        user.setSalary(44433.0);
-        user.setAge(40);
+        Userdata userdata = new Userdata();
+        userdata.setSalary(44433.0);
+        userdata.setAge(40);
 
-        given().body(user)
+        given().body(userdata)
         .when()
-                .post("api/user/")
+                .post("api/userdata/")
         .then()
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .body("status", equalTo(HttpStatus.INTERNAL_SERVER_ERROR.value()))
                 .body("error", equalTo("Internal Server Error"))
                 .body("exception", containsString("ConstraintViolationException"))
                 .body("message", containsString("Validation failed for classes"))
-                .body("path", equalTo("/DashboardIO/api/user/"));
+                .body("path", equalTo("/DashboardIO/api/userdata/"));
     }
 
     @Test
@@ -154,30 +153,30 @@ public class RestApiControllerTest extends AbstractIntegrationTest {
         Integer age = 40;
         Double salary = 44433.0;
 
-        User user = new User();
-        user.setName(randUName);
-        user.setSalary(salary);
-        user.setAge(age);
+        Userdata userdata = new Userdata();
+        userdata.setName(randUName);
+        userdata.setSalary(salary);
+        userdata.setAge(age);
 
-        given().body(user)
+        given().body(userdata)
                 .when()
-                .post("api/user/")
+                .post("api/userdata/")
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
 
         Integer userId = given().when().get("/api/getuser/"+randUName).then().extract().path("id");
 
-        user.setSalary(salary+100.0);
-        user.setAge(age+5);
+        userdata.setSalary(salary+100.0);
+        userdata.setAge(age+5);
 
-        given().body(user)
+        given().body(userdata)
         .when()
-                .put("api/user/"+userId)
+                .put("api/userdata/"+userId)
         .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("name", equalTo(user.getName()))
-                .body("age", equalTo(user.getAge()))
-                .body("salary", equalTo((float)user.getSalary()));
+                .body("name", equalTo(userdata.getName()))
+                .body("age", equalTo(userdata.getAge()))
+                .body("salary", equalTo((float)userdata.getSalary()));
     }
 
     @Test
@@ -185,50 +184,50 @@ public class RestApiControllerTest extends AbstractIntegrationTest {
 
         String randUName = getRandomUsername();
 
-        User user = new User();
-        user.setName(randUName);
-        user.setSalary(44433.0);
-        user.setAge(40);
+        Userdata userdata = new Userdata();
+        userdata.setName(randUName);
+        userdata.setSalary(44433.0);
+        userdata.setAge(40);
 
-        given().body(user)
+        given().body(userdata)
                 .when()
-                .put("api/user/9999")
+                .put("api/userdata/9999")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
-                .body("errorMessage", equalTo("Unable to update. User with id 9999 not found."));
+                .body("errorMessage", equalTo("Unable to update. Userdata with id 9999 not found."));
     }
 
     @Test
     public void updateUserTest_invalidData() {
 
-        User user = new User();
-        user.setAge(40);
+        Userdata userdata = new Userdata();
+        userdata.setAge(40);
 
-        given().body(user)
+        given().body(userdata)
                 .when()
-                .put("api/user/1")
+                .put("api/userdata/1")
                 .then()
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .body("status", equalTo(HttpStatus.INTERNAL_SERVER_ERROR.value()))
                 .body("error", equalTo("Internal Server Error"))
                 .body("exception", containsString("TransactionSystemException"))
                 .body("message", containsString("Could not commit JPA transaction"))
-                .body("path", equalTo("/DashboardIO/api/user/1"));
+                .body("path", equalTo("/DashboardIO/api/userdata/1"));
     }
 
     @Test
     public void deleteUserTest_normalCase() {
 
         String randUName = getRandomUsername();
-        User user = new User();
-        user.setName(randUName);
-        user.setSalary(44433.0);
-        user.setAge(40);
+        Userdata userdata = new Userdata();
+        userdata.setName(randUName);
+        userdata.setSalary(44433.0);
+        userdata.setAge(40);
 
-        given().body(user).when().post("api/user/").then().statusCode(HttpStatus.CREATED.value());
+        given().body(userdata).when().post("api/userdata/").then().statusCode(HttpStatus.CREATED.value());
         Integer userId = given().when().get("/api/getuser/"+randUName).then().extract().path("id");
-        given().when().delete("api/user/"+userId).then().statusCode(HttpStatus.NO_CONTENT.value());
-        given().when().get("/api/user/"+userId).then().statusCode(HttpStatus.NOT_FOUND.value());
+        given().when().delete("api/userdata/"+userId).then().statusCode(HttpStatus.NO_CONTENT.value());
+        given().when().get("/api/userdata/"+userId).then().statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @Test
@@ -236,7 +235,7 @@ public class RestApiControllerTest extends AbstractIntegrationTest {
 
         given()
         .when()
-                .delete("api/user/99999")
+                .delete("api/userdata/99999")
         .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .body("errorMessage", containsString("Unable to delete."));
@@ -246,21 +245,21 @@ public class RestApiControllerTest extends AbstractIntegrationTest {
     public void retrieveUserByUsernameTest_normalCase() {
 
         String randUName = getRandomUsername();
-        User user = new User();
-        user.setName(randUName);
-        user.setSalary(44433.0);
-        user.setAge(40);
+        Userdata userdata = new Userdata();
+        userdata.setName(randUName);
+        userdata.setSalary(44433.0);
+        userdata.setAge(40);
 
-        given().body(user).when().post("api/user/").then().statusCode(HttpStatus.CREATED.value());
+        given().body(userdata).when().post("api/userdata/").then().statusCode(HttpStatus.CREATED.value());
 
         given()
                 .when()
                 .get("api/getuser/"+randUName)
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("name", equalTo(user.getName()))
-                .body("age", equalTo(user.getAge()))
-                .body("salary", equalTo((float)user.getSalary()));
+                .body("name", equalTo(userdata.getName()))
+                .body("age", equalTo(userdata.getAge()))
+                .body("salary", equalTo((float)userdata.getSalary()));
     }
 
     @Test
@@ -273,6 +272,6 @@ public class RestApiControllerTest extends AbstractIntegrationTest {
                 .get("api/getuser/"+randUName)
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
-                .body("errorMessage", equalTo("User with username " + randUName + " not found"));
+                .body("errorMessage", equalTo("Userdata with username " + randUName + " not found"));
     }
 }
