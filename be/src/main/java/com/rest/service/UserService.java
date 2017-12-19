@@ -1,23 +1,18 @@
 package com.rest.service;
 
 import com.rest.model.User;
-import java.util.List;
 
 public interface UserService {
 
-    User findById(Long id);
+    int ACTIVATED_USER = 1;
+    int NOT_ACTIVATED_USER = 0;
 
-    User findByName(String name);
-
+    User findUserByEmail(String email);
     void saveUser(User user);
-
-    void updateUser(User user);
-
-    void deleteUserById(Long id);
-
-    void deleteAllUsers();
-
-    List<User> findAllUsers();
-
-    boolean isUserExists(User user);
+    User updateUser(User user);
+    String extractUsername(String authHeader);
+    String randomWord();
+    User activateUser(User user);
+    User deleteUser(String username);
+    User resetPass(User user);
 }

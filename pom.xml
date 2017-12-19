@@ -38,7 +38,6 @@
         <cthul-matchers-version>1.1.0</cthul-matchers-version>
         <rest-assured-version>2.4.1</rest-assured-version>
         <junit-toolbox.version>2.2</junit-toolbox.version>
-        <spring-version>4.1.5.RELEASE</spring-version>
         <slf4j-version>1.7.2</slf4j-version>
         <maven-resources.version>2.6</maven-resources.version>
         <maven-failsafe.version>2.17</maven-failsafe.version>
@@ -51,6 +50,9 @@
         <maven.surefire.plugin.version>2.18.1</maven.surefire.plugin.version>
         <maven-pmd.version>3.6</maven-pmd.version>
         <cobertura-maven-plugin-version>2.4</cobertura-maven-plugin-version>
+        <spring-version>4.1.5.RELEASE</spring-version>
+        <springsecurity.version>4.1.1.RELEASE</springsecurity.version>
+        <springframework.version>4.3.11.RELEASE</springframework.version>
     </properties>
 
     <parent>

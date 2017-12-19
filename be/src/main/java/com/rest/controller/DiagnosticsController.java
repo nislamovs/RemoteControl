@@ -1,6 +1,6 @@
 package com.rest.controller;
 
-import com.rest.service.AlertService;
+import com.rest.service.MailService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,10 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.ManagedMap;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.AbstractEnvironment;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -29,10 +30,12 @@ public class DiagnosticsController extends AbstractController {
     private static final DateFormat DATETIME_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     @Autowired
-    AlertService alertService;
+    Environment environment;
+    @Autowired
+    MailService mailService;
 
     @ApiOperation(value="healthcheck", notes="Application healthcheck.")
-    @RequestMapping(value = "/healthcheck", method = RequestMethod.GET)
+    @GetMapping(value = "/healthcheck")
     public ResponseEntity<Map<String, String>> healthcheck() throws IOException {
         LOG.info("Healthcheck requested.");
         Properties properties = new Properties();
@@ -50,7 +53,7 @@ public class DiagnosticsController extends AbstractController {
 
     @ApiOperation(value="alertmail", notes="Generates exception, catches it and send stacktrace to email.")
     @Profile("development")
-    @RequestMapping(value = "/alertmail", method = RequestMethod.GET)
+    @GetMapping(value = "/alertmail")
     public ResponseEntity<Map<String, String>> alertmail() {
 
         try {
@@ -58,7 +61,7 @@ public class DiagnosticsController extends AbstractController {
             throw new RuntimeException("Testing alert service... check mail :)");
         } catch (RuntimeException e) {
             LOG.info("Catching exception ...");
-            alertService.sendError(e);
+            mailService.sendError(e);
         }
 
         LOG.info("Exception generated. Alert mail sent.");
@@ -68,5 +71,12 @@ public class DiagnosticsController extends AbstractController {
         params.put("Time", String.valueOf(DATETIME_FORMAT.format(new Date())));
 
         return new ResponseEntity<Map<String, String>>(params, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/sendemail/")
+    public ResponseEntity<?> sendMail() {
+
+        mailService.sendMail("This is test message.", environment.getProperty("alert.email.to"));
+        return new ResponseEntity<>("{ok}", HttpStatus.OK);
     }
 }

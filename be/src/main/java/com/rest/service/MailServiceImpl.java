@@ -1,5 +1,6 @@
 package com.rest.service;
 
+import com.rest.model.User;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joda.time.DateTime;
@@ -11,9 +12,12 @@ import org.springframework.core.env.Environment;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,13 +34,14 @@ import static org.joda.time.format.ISODateTimeFormat.dateTime;
 
 @Component
 @Profile({"development", "production"})
-public class AlertService {
+public class MailServiceImpl implements MailService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AlertService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MailServiceImpl.class);
 
     private static final ThreadLocal<String> REQUEST_URI = new ThreadLocal<>();
     private static final String SUBJECT_PATTERN = "%s (%d exception(s))";
     private static final String DEBUG_MESSAGE_PATTERN = "Sending message {}";
+    private static final String SERVER_URL_PREFIX = "http://localhost:8080/DashboardIO/auth/activateuser/";
 
     private final List<Alert> alerts = new LinkedList<>();
     private final AtomicLong exceptionAlertCount = new AtomicLong();
@@ -44,16 +49,55 @@ public class AlertService {
     private final List<String> ignorePatterns;
 
     @Autowired
+    Environment environment;
+    @Autowired
     private JavaMailSender javaMailSender;
     @Autowired
     private SimpleMailMessage alertMessageTemplate;
 
     @Autowired
-    public AlertService(Environment env) {
+    public MailServiceImpl(Environment env) {
         ignorePatterns = asList(split(env.getProperty("alert.email.ignorePatterns", ""), ','));
         maxAlerts = env.getProperty("alert.email.max.alerts", Integer.class, Integer.MAX_VALUE);
     }
 
+    @Override
+    public void sendActivationMail(User user) {
+        System.out.println("We are sending activation mail");
+        MimeMessage message = javaMailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom(environment.getProperty("DashboardIO.prod.do-not-reply@gmail.com"));
+            helper.setTo(user.getEmail());
+            helper.setSubject("Confirmation letter");
+            helper.setText(generateConfirmationLink(user));
+        } catch (MessagingException e) {
+            System.out.println("Failed to parse email.");
+        }
+
+        sendMessage(message);
+    }
+
+    @Override
+    public void sendNewPasswordMail(User user, String passwd) {
+        System.out.println("We are sending activation mail");
+        MimeMessage message = javaMailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom("noreply@noreply.com");
+            helper.setTo(user.getEmail());
+            helper.setSubject("New password");
+            helper.setText("Hi " + user.getName() + "!\n" + "Your new password is: \n " + passwd );
+        } catch (MessagingException e) {
+            System.out.println("Failed to parse email.");
+        }
+
+        sendMessage(message);
+    }
+
+    @Override
     public void sendError(Throwable t) {
         if (isEmpty(alertMessageTemplate.getTo()) || isIgnored(t)) {
             return;
@@ -67,6 +111,24 @@ public class AlertService {
         }
     }
 
+    @Override
+    public void sendMail(String msg, String email) {
+        System.out.println("We are sending mail");
+        MimeMessage message = javaMailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom("noreply@noreply.com");
+            helper.setTo(email);
+            helper.setSubject("Testing mail service.");
+            helper.setText(msg);
+        } catch (MessagingException e) {
+            System.out.println("Failed to parse email.");
+        }
+
+        sendMessage(message);
+    }
+
     @Scheduled(fixedDelayString = "${alert.email.interval:600000}")
     public void sendExceptionAlerts() {
         Pair<List<Alert>, Long> batch = getBatch();
@@ -77,6 +139,12 @@ public class AlertService {
         message.setSubject(format(SUBJECT_PATTERN, message.getSubject(), batch.getValue()));
         message.setText(buildMessage(batch.getKey()));
         sendMessage(message);
+    }
+
+    private String generateConfirmationLink(User user) {
+        String link = SERVER_URL_PREFIX + "?username=" + user.getEmail() + "&keyword=" + user.getKeyword();
+        return "Hi " + user.getName() + "!\n" + "Please follow this link: \n " + link
+                     + "\n\nThank you for choosing DashboardIO!";
     }
 
     private boolean isIgnored(Throwable t) {
@@ -112,6 +180,14 @@ public class AlertService {
                     .append(System.getProperty("line.separator"));
         }
         return strBuild.toString();
+    }
+
+    private void sendMessage(MimeMessage message) {
+        try {
+            javaMailSender.send(message);
+        } catch (MailException e) {
+            System.out.println("Failed to send alert email " + e.toString());
+        }
     }
 
     private void sendMessage(SimpleMailMessage message) {

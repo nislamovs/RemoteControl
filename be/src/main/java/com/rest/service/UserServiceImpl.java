@@ -1,49 +1,108 @@
 package com.rest.service;
 
-import java.util.List;
-
+import com.rest.model.Role;
 import com.rest.model.User;
+import com.rest.repositories.RoleRepository;
 import com.rest.repositories.UserRepository;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.HashSet;
 
 @Service("userService")
-@Transactional
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private MailService mailService;
 
-    public User findById(Long id) {
-        return userRepository.findOne(id);
+    @Override
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
-    public User findByName(String name) {
-        return userRepository.findByName(name);
-    }
-
+    @Override
     public void saveUser(User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setActive(NOT_ACTIVATED_USER);
+        user.setKeyword(randomWord());
+        user.setRegdate(DateTime.now());
+        Role userRole = roleRepository.findByRole("ADMIN");
+        user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
         userRepository.save(user);
+
+        mailService.sendActivationMail(user);
     }
 
-    public void updateUser(User user) {
-        saveUser(user);
+    @Override
+    public User updateUser(User user) {
+        User newUser = findUserByEmail(user.getEmail());
+        if(newUser != null) {
+            newUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            userRepository.save(newUser);
+        }
+
+        return newUser;
     }
 
-    public void deleteUserById(Long id) {
-        userRepository.delete(id);
+    @Override
+    public User resetPass(User user){
+        User newUser = findUserByEmail(user.getEmail());
+        if(newUser != null) {
+            String passwd = randomWord();
+            newUser.setPassword(bCryptPasswordEncoder.encode(passwd));
+            userRepository.save(newUser);
+            mailService.sendNewPasswordMail(newUser, passwd);
+        }
+
+        return newUser;
     }
 
-    public void deleteAllUsers() {
-        userRepository.deleteAll();
+    @Override
+    public String extractUsername(String authHeader) {
+        byte[] decodedBytes = Base64.getDecoder().decode(authHeader.split(" ")[1]);
+        String decodedUsername = new String(decodedBytes).split(":")[0];
+
+        return new String(decodedUsername);
     }
 
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
+    @Override
+    public User activateUser(User userToActivate) {
+        User user = userRepository.findByEmail(userToActivate.getEmail());
+        if(    user != null
+                && user.getKeyword().equals(userToActivate.getKeyword()))
+        {
+            user.setActive(ACTIVATED_USER);
+            userRepository.save(user);
+        }
+
+        return user;
     }
 
-    public boolean isUserExists(User user) {
-        return findByName(user.getName()) != null;
+    @Override
+    public User deleteUser(String username) {
+        User user = userRepository.findByEmail(username);
+        if(user != null) {
+            user.setActive(NOT_ACTIVATED_USER);
+            userRepository.save(user);
+        }
+
+        return user;
     }
+
+    //	@Override
+    public String randomWord() {
+        return RandomStringUtils.randomAlphabetic(16);
+    }
+
 }

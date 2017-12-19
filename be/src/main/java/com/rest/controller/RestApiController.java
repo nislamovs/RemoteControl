@@ -1,7 +1,7 @@
 package com.rest.controller;
 
-import com.rest.model.User;
-import com.rest.service.UserService;
+import com.rest.model.Userdata;
+import com.rest.service.UserdataService;
 import com.rest.util.CustomErrorType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,102 +21,102 @@ public class RestApiController extends AbstractController {
     private static final Logger LOG = LoggerFactory.getLogger(RestApiController.class);
 
     @Autowired
-    UserService userService; //Service which will do all data retrieval/manipulation work
+    UserdataService userdataService; //Service which will do all data retrieval/manipulation work
 
     // -------------------Retrieve All Users---------------------------------------------
     @RequestMapping(value = "/user/", method = RequestMethod.GET)
-    public ResponseEntity<List<User>> listAllUsers() {
-        List<User> users = userService.findAllUsers();
+    public ResponseEntity<List<Userdata >> listAllUsers() {
+        List<Userdata> users = userdataService.findAllUserdatas();
         if (users.isEmpty()) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+        return new ResponseEntity<List<Userdata>>(users, HttpStatus.OK);
     }
 
-    // -------------------Retrieve Single User by ID------------------------------------------
+    // -------------------Retrieve Single Userdata by ID------------------------------------------
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getUserByID(@PathVariable("id") long id) {
-        LOG.info("Fetching User with id {}", id);
-        User user = userService.findById(id);
+        LOG.info("Fetching Userdata with id {}", id);
+        Userdata user = userdataService.findById(id);
         if (user == null) {
-            LOG.error("User with id {} not found.", id);
-            return new ResponseEntity(new CustomErrorType("User with id " + id + " not found"), HttpStatus.NOT_FOUND);
+            LOG.error("Userdata with id {} not found.", id);
+            return new ResponseEntity(new CustomErrorType("Userdata with id " + id + " not found"), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+        return new ResponseEntity<Userdata >(user, HttpStatus.OK);
     }
 
-    // -------------------Retrieve Single User by name------------------------------------------
+    // -------------------Retrieve Single Userdata by name------------------------------------------
     @RequestMapping(value = "/getuser/{username}", method = RequestMethod.GET)
     public ResponseEntity<?> getUserByUsername(@PathVariable("username") String username) {
-        LOG.info("Fetching User with username {}", username);
-        User user = userService.findByName(username);
+        LOG.info("Fetching Userdata with username {}", username);
+        Userdata user = userdataService.findByName(username);
         if (user == null) {
-            LOG.error("User with username {} not found.", username);
-            return new ResponseEntity(new CustomErrorType("User with username " + username + " not found"), HttpStatus.NOT_FOUND);
+            LOG.error("Userdata with username {} not found.", username);
+            return new ResponseEntity(new CustomErrorType("Userdata with username " + username + " not found"), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+        return new ResponseEntity<Userdata>(user, HttpStatus.OK);
     }
 
-    // -------------------Create a User-------------------------------------------
+    // -------------------Create a Userdata -------------------------------------------
 
     @RequestMapping(value = "/user/", method = RequestMethod.POST)
-    public ResponseEntity<?> createUser(@RequestBody User user, UriComponentsBuilder ucBuilder) {
-        LOG.info("Creating User : {}", user);
+    public ResponseEntity<?> createUser(@RequestBody Userdata user, UriComponentsBuilder ucBuilder) {
+        LOG.info("Creating Userdata : {}", user);
 
-        if (userService.isUserExists(user)) {
-            LOG.error("Unable to create. A User with name {} already exists", user.getName());
+        if (userdataService.isUserdataExists(user)) {
+            LOG.error("Unable to create. A Userdata with name {} already exists", user.getName());
             return  new ResponseEntity(new CustomErrorType("Unable to create. A user with name " + user.getName() + " already exists."), HttpStatus.CONFLICT);
         }
-        userService.saveUser(user);
+        userdataService.saveUserdata(user);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/api/user/{id}").buildAndExpand(user.getId()).toUri());
         return new ResponseEntity<String>(headers, HttpStatus.CREATED);
     }
 
-    // -------------------Update a User-------------------------------------------
+    // -------------------Update a Userdata -------------------------------------------
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> updateUser(@PathVariable("id") long id, @RequestBody User user) {
-        LOG.info("Updating User with id {}", id);
+    public ResponseEntity<?> updateUser(@PathVariable("id") long id, @RequestBody Userdata user) {
+        LOG.info("Updating Userdata with id {}", id);
 
-        User currentUser = userService.findById(id);
+        Userdata currentUserdata = userdataService.findById(id);
 
-        if(currentUser == null) {
-            LOG.error("Unable to update. User with id {} not exists.", id);
-            return new ResponseEntity(new CustomErrorType("Unable to update. User with id " + id + " not found."), HttpStatus.NOT_FOUND);
+        if(currentUserdata == null) {
+            LOG.error("Unable to update. Userdata with id {} not exists.", id);
+            return new ResponseEntity(new CustomErrorType("Unable to update. Userdata with id " + id + " not found."), HttpStatus.NOT_FOUND);
         }
 
-        currentUser.setName(user.getName());
-        currentUser.setAge(user.getAge());
-        currentUser.setSalary(user.getSalary());
+        currentUserdata.setName(user.getName());
+        currentUserdata.setAge(user.getAge());
+        currentUserdata.setSalary(user.getSalary());
 
-        userService.updateUser(currentUser);
-        return new ResponseEntity<User>(currentUser, HttpStatus.OK);
+        userdataService.updateUserdata(currentUserdata);
+        return new ResponseEntity<Userdata >(currentUserdata, HttpStatus.OK);
     }
 
-    // ------------------- Delete a User-----------------------------------------
+    // ------------------- Delete a Userdata -----------------------------------------
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteUser(@PathVariable("id") long id) {
-        LOG.info("Fetching & Deleting User with id {}", id);
+        LOG.info("Fetching & Deleting Userdata with id {}", id);
 
-        User user = userService.findById(id);
+        Userdata user = userdataService.findById(id);
         if (user == null) {
-            LOG.error("Unable to delete. User with id {} not found.", id);
-            return new ResponseEntity(new CustomErrorType("Unable to delete. User with id " + id + " not found."), HttpStatus.NOT_FOUND);
+            LOG.error("Unable to delete. Userdata with id {} not found.", id);
+            return new ResponseEntity(new CustomErrorType("Unable to delete. Userdata with id " + id + " not found."), HttpStatus.NOT_FOUND);
         }
-        userService.deleteUserById(id);
-        return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
+        userdataService.deleteUserdataById(id);
+        return new ResponseEntity<Userdata >(HttpStatus.NO_CONTENT);
     }
 
     // ------------------- Delete All Users-----------------------------
 
     @RequestMapping(value = "/user/", method = RequestMethod.DELETE)
-    public ResponseEntity<User> deleteAllUsers() {
+    public ResponseEntity<Userdata> deleteAllUserdatas() {
         LOG.info("Deleting All Users");
 
-        userService.deleteAllUsers();
-        return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
+        userdataService.deleteAllUserdatas();
+        return new ResponseEntity<Userdata>(HttpStatus.NO_CONTENT);
     }
 }
