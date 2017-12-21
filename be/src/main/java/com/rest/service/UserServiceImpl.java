@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService{
     public User activateUser(User userToActivate) {
         User user = userRepository.findByEmail(userToActivate.getEmail());
         if(    user != null
-                && user.getKeyword().equals(userToActivate.getKeyword()))
+            && user.getKeyword().equals(userToActivate.getKeyword()))
         {
             user.setActive(ACTIVATED_USER);
             userRepository.save(user);

@@ -1,5 +1,9 @@
+a {
+    cursor: pointer;
+}
+
 body, #mainWrapper {
-    height: 100%;
+    height: 70%;
     background-color:rgb(245, 245, 245);
 }
 
@@ -14,6 +18,15 @@ body, .form-control{
 
 .has-error{
     color:red;
+}
+
+.formcontainer{
+    background-color: #DAE8E8;
+    padding: 20px;
+}
+
+.tablecontainer{
+    padding-left: 20px;
 }
 
 .generic-container {
@@ -31,4 +44,3 @@ body, .form-control{
 .custom-width {
     width: 80px !important;
 }
-

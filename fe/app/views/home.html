@@ -1,0 +1,148 @@
+<h1>Hi {{vm.username}}!</h1>
+<p>You're logged in!!</p>
+<div class="generic-container">
+    <!--<div class="panel panel-default">-->
+    <button type="button" class="button btn " ng-click="vm.deleteAccount()">Delete this account</button>
+    <button id="hide_show" type="button" class="button btn ">Change pass</button>
+    <!--</div>-->
+    <div id="account_delete_dialog"></div>
+    <br/>
+    <br/>
+    <div class="panel panel-default">
+        <div id="change_pass_form" class="formcontainer" style="display:none">
+            <div class="alert alert-success" role="alert" ng-if="ctrl.successMessage">{{ctrl.successMessage}}</div>
+            <div class="alert alert-danger" role="alert" ng-if="ctrl.errorMessage">{{ctrl.errorMessage}}</div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4>Change Password</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-9 ">
+                        <form id="passwordForm">
+                            <input type="password" class="input-lg form-control" name="password1" id="password1" placeholder="New Password" autocomplete="off" ng-model="vm.user.password1" >
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <span id="8char" class="glyphicon glyphicon-remove" style="color:#FF0004;"></span> 8 Characters Long<br>
+                                    <span id="ucase" class="glyphicon glyphicon-remove" style="color:#FF0004;"></span> One Uppercase Letter
+                                </div>
+                                <div class="col-sm-6">
+                                    <span id="lcase" class="glyphicon glyphicon-remove" style="color:#FF0004;"></span> One Lowercase Letter<br>
+                                    <span id="num" class="glyphicon glyphicon-remove" style="color:#FF0004;"></span> One Number
+                                </div>
+                            </div>
+                            <input type="password" class="input-lg form-control" name="password2" id="password2" placeholder="Repeat Password" autocomplete="off" ng-model="vm.user.password2" >
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <span id="pwmatch" class="glyphicon glyphicon-remove" style="color:#FF0004;"></span> Passwords Match
+                                </div>
+                            </div>
+                            <input ng-click="vm.changePass()" class="col-xs-12 btn btn-primary btn-load btn-lg" data-loading-text="Changing Password..." value="Change Password">
+                        </form>
+                    </div><!--/col-sm-6-->
+                </div><!--/row-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3>All registered users:</h3>
+
+<div class="generic-container">
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading"><span class="lead">Specific User </span></div>
+        <div class="panel-body">
+            <div class="formcontainer">
+                <div class="alert alert-success" role="alert" ng-if="ctrl.successMessage">{{ctrl.successMessage}}</div>
+                <div class="alert alert-danger" role="alert" ng-if="ctrl.errorMessage">{{ctrl.errorMessage}}</div>
+                <form ng-submit="ctrl.submit()" name="myForm" class="form-horizontal">
+                    <input type="hidden" ng-model="ctrl.user.id" />
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-2 control-lable" for="uname">Name</label>
+                            <div class="col-md-7">
+                                <input type="text" ng-model="ctrl.user.name" id="uname" class="username form-control input-sm" placeholder="Enter your name" required ng-minlength="3"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-2 control-lable" for="age">Age</label>
+                            <div class="col-md-7">
+                                <input type="text" ng-model="ctrl.user.age" id="age" class="form-control input-sm" placeholder="Enter your Age." required ng-pattern="ctrl.onlyIntegers"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-2 control-lable" for="salary">Salary</label>
+                            <div class="col-md-7">
+                                <input type="text" ng-model="ctrl.user.salary" id="salary" class="form-control input-sm" placeholder="Enter your Salary." required ng-pattern="ctrl.onlyNumbers"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-actions floatRight">
+                            <input type="submit"  value="{{!ctrl.user.id ? 'Add' : 'Update'}}" class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid || myForm.$pristine">
+                            <button type="button" ng-click="ctrl.reset()" class="btn btn-warning btn-sm" ng-disabled="myForm.$pristine">Reset Form</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading"><span class="lead">List of Users </span></div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>NAME</th>
+                        <th>AGE</th>
+                        <th>SALARY</th>
+                        <th width="100"></th>
+                        <th width="100"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="u in vm.allUsers">
+                        <td>{{u.id}}</td>
+                        <td>{{u.name}}</td>
+                        <td>{{u.age}}</td>
+                        <td>{{u.salary}}</td>
+                        <td><button type="button" ng-click="ctrl.editUser(u.id)" class="btn btn-success custom-width">Edit</button></td>
+                        <td><button type="button" ng-click="ctrl.removeUser(u.id)" class="btn btn-danger custom-width">Remove</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<table>-->
+<!--<tr>-->
+<!--<td>ID</td>-->
+<!--<td>Name</td>-->
+<!--<td>Age</td>-->
+<!--<td>Salary</td>-->
+<!--</tr>-->
+<!--<tr ng-repeat="user in vm.allUsers">-->
+<!--<td>{{ user.id }}</td>-->
+<!--<td>{{ user.name }}</td>-->
+<!--<td>{{ user.age }}</td>-->
+<!--<td>{{ user.salary }}</td>-->
+<!--</tr>-->
+<!--</table>-->
+
+<p>&nbsp;</p>
+<p><a href="#!/login" class="btn btn-primary">Logout</a></p>

@@ -6568,3 +6568,12 @@ button.close {
   }
 }
 /*# sourceMappingURL=bootstrap.css.map */
+.b-container {
+  width: 200px;
+  height: 150px;
+  background-color: #ccc;
+  margin: 0px auto;
+  padding: 10px;
+  font-size: 30px;
+  color: #fff;
+}

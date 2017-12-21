@@ -1,109 +1,55 @@
-'use strict';
+(function () {
+    'use strict';
 
-angular.module('dashboardFE').factory('UserService',
-    ['$localStorage', '$http', '$q', 'urls',
-        function ($localStorage, $http, $q, urls) {
+    angular
+        .module('dashboardFE')
+        .factory('UserService', UserService);
 
-            var factory = {
-                loadAllUsers: loadAllUsers,
-                getAllUsers: getAllUsers,
-                getUser: getUser,
-                createUser: createUser,
-                updateUser: updateUser,
-                removeUser: removeUser
-            };
+    UserService.$inject = ['$http', '$q'];
+    function UserService($http, $q) {
 
-            return factory;
+        var prefix="http://localhost:8080/DashboardIO/api";
+        var service = {};
 
-            function loadAllUsers() {
-                console.log('Fetching all users');
-                var deferred = $q.defer();
-                $http.get(urls.USER_SERVICE_API)
-                    .then(
-                        function (response) {
-                            console.log('Fetched successfully all users');
-                            $localStorage.users = response.data;
-                            deferred.resolve(response);
-                        },
-                        function (errResponse) {
-                            console.error('Error while loading users');
-                            deferred.reject(errResponse);
-                        }
-                    );
-                return deferred.promise;
-            }
+        service.GetAll = GetAll;
+        service.GetById = GetById;
+        service.GetByUsername = GetByUsername;
+        service.Update = Update;
+        service.Delete = Delete;
 
-            function getAllUsers(){
-                return $localStorage.users;
-            }
+        return service;
 
-            function getUser(id) {
-                console.log('Fetching User with id :'+id);
-                var deferred = $q.defer();
-                $http.get(urls.USER_SERVICE_API + id)
-                    .then(
-                        function (response) {
-                            console.log('Fetched successfully User with id :'+id);
-                            deferred.resolve(response.data);
-                        },
-                        function (errResponse) {
-                            console.error('Error while loading user with id :'+id);
-                            deferred.reject(errResponse);
-                        }
-                    );
-                return deferred.promise;
-            }
-
-            function createUser(user) {
-                console.log('Creating User');
-                var deferred = $q.defer();
-                $http.post(urls.USER_SERVICE_API, user)
-                    .then(
-                        function (response) {
-                            loadAllUsers();
-                            deferred.resolve(response.data);
-                        },
-                        function (errResponse) {
-                            console.error('Error while creating User : '+errResponse.data.errorMessage);
-                            deferred.reject(errResponse);
-                        }
-                    );
-                return deferred.promise;
-            }
-
-            function updateUser(user, id) {
-                console.log('Updating User with id '+id);
-                var deferred = $q.defer();
-                $http.put(urls.USER_SERVICE_API + id, user)
-                    .then(
-                        function (response) {
-                            loadAllUsers();
-                            deferred.resolve(response.data);
-                        },
-                        function (errResponse) {
-                            console.error('Error while updating User with id :'+id);
-                            deferred.reject(errResponse);
-                        }
-                    );
-                return deferred.promise;
-            }
-
-            function removeUser(id) {
-                console.log('Removing User with id '+id);
-                var deferred = $q.defer();
-                $http.delete(urls.USER_SERVICE_API + id)
-                    .then(
-                        function (response) {
-                            loadAllUsers();
-                            deferred.resolve(response.data);
-                        },
-                        function (errResponse) {
-                            console.error('Error while removing User with id :'+id);
-                            deferred.reject(errResponse);
-                        }
-                    );
-                return deferred.promise;
-            }
-
+        function GetAll() {
+            return $http.get(prefix+'/user/').then(handleSuccess, handleError('Error getting all users'));
         }
-    ]);
+
+        function GetById(id) {
+            return $http.get(prefix+'/user/' + id).then(handleSuccess, handleError('Error getting user by id'));
+        }
+
+        function GetByUsername(username) {
+            return $http.get(prefix+'/user/' + username).then(handleSuccess, handleError('Error getting user by username'));
+        }
+
+        function Update(user) {
+            return $http.put(prefix+'/user/' + user.id, user).then(handleSuccess, handleError('Error updating user'));
+        }
+
+        function Delete(id) {
+            return $http.delete(prefix+'/user/' + id).then(handleSuccess, handleError('Error deleting user'));
+        }
+
+        // private functions
+
+        function handleSuccess(res) {
+            return res.data;
+        }
+
+        function handleError(error) {
+            return function () {
+                return { success: false, message: error };
+            };
+        }
+    }
+
+})();

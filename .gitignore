@@ -22,7 +22,8 @@ fe/etc
 fe/.sass-cache
 **/coverage
 
-
+#Maintenance scripts
+**/maintenance_scripts/authentication/*
 
 
 

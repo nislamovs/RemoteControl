@@ -68,7 +68,7 @@ public class MailServiceImpl implements MailService {
 
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setFrom(environment.getProperty("DashboardIO.prod.do-not-reply@gmail.com"));
+            helper.setFrom(environment.getProperty("alert.email.from"));
             helper.setTo(user.getEmail());
             helper.setSubject("Confirmation letter");
             helper.setText(generateConfirmationLink(user));
@@ -81,7 +81,7 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public void sendNewPasswordMail(User user, String passwd) {
-        System.out.println("We are sending activation mail");
+        System.out.println("We are sending new password mail");
         MimeMessage message = javaMailSender.createMimeMessage();
 
         try {
@@ -90,6 +90,24 @@ public class MailServiceImpl implements MailService {
             helper.setTo(user.getEmail());
             helper.setSubject("New password");
             helper.setText("Hi " + user.getName() + "!\n" + "Your new password is: \n " + passwd );
+        } catch (MessagingException e) {
+            System.out.println("Failed to parse email.");
+        }
+
+        sendMessage(message);
+    }
+
+    @Override
+    public void sendMail(String msg, String email) {
+        System.out.println("We are sending mail");
+        MimeMessage message = javaMailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom("noreply@noreply.com");
+            helper.setTo(email);
+            helper.setSubject("Testing mail service.");
+            helper.setText(msg);
         } catch (MessagingException e) {
             System.out.println("Failed to parse email.");
         }
@@ -109,24 +127,6 @@ public class MailServiceImpl implements MailService {
                 alerts.add(alert);
             }
         }
-    }
-
-    @Override
-    public void sendMail(String msg, String email) {
-        System.out.println("We are sending mail");
-        MimeMessage message = javaMailSender.createMimeMessage();
-
-        try {
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setFrom("noreply@noreply.com");
-            helper.setTo(email);
-            helper.setSubject("Testing mail service.");
-            helper.setText(msg);
-        } catch (MessagingException e) {
-            System.out.println("Failed to parse email.");
-        }
-
-        sendMessage(message);
     }
 
     @Scheduled(fixedDelayString = "${alert.email.interval:600000}")
@@ -186,7 +186,7 @@ public class MailServiceImpl implements MailService {
         try {
             javaMailSender.send(message);
         } catch (MailException e) {
-            System.out.println("Failed to send alert email " + e.toString());
+            System.out.println("Failed to send email to user! " + e.toString());
         }
     }
 
